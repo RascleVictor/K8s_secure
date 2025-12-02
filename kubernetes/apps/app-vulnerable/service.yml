@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-vulnerable
+  namespace: app-vulnerable
+spec:
+  selector:
+    app: app-vulnerable
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP

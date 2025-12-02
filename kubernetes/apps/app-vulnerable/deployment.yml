@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-vulnerable
+  namespace: app-vulnerable
+  labels:
+    app: app-vulnerable
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-vulnerable
+  template:
+    metadata:
+      labels:
+        app: app-vulnerable
+    spec:
+      containers:
+        - name: app-vulnerable
+          image: app-vulnerable:1
+          ports:
+            - containerPort: 80
