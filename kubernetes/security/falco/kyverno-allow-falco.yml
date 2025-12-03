@@ -1,0 +1,24 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: allow-falco-exceptions
+spec:
+  background: false
+  validationFailureAction: Audit
+  rules:
+    - name: allow-falco-namespace
+      match:
+        any:
+          - resources:
+              kinds:
+                - DaemonSet
+                - Pod
+              namespaces:
+                - falco
+              names:
+                - falco*
+      exclude:
+        any:
+          - resources:
+              namespaces:
+                - kube-system

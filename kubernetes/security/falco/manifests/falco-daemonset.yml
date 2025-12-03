@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: falco
+  namespace: falco
+spec:
+  selector:
+    matchLabels:
+      app: falco
+  template:
+    metadata:
+      labels:
+        app: falco
+        env: dev
+    spec:
+      serviceAccountName: falco
+      containers:
+        - name: falco
+          image: falcosecurity/falco:v0.38.0
+          securityContext:
+            privileged: true
+            runAsNonRoot: false
+          resources:
+            requests:
+              cpu: 100m
+              memory: 200Mi
+            limits:
+              cpu: 500m
+              memory: 500Mi
+          livenessProbe:
+            exec:
+              command: ["falco", "-V"]
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            exec:
+              command: ["falco", "-V"]
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          volumeMounts:
+            - name: dev-fs
+              mountPath: /host/dev
+              readOnly: true
+            - name: proc-fs
+              mountPath: /host/proc
+              readOnly: true
+            - name: boot-fs
+              mountPath: /host/boot
+              readOnly: true
+            - name: etc-fs
+              mountPath: /host/etc
+              readOnly: true
+      volumes:
+        - name: dev-fs
+          hostPath:
+            path: /dev
+        - name: proc-fs
+          hostPath:
+            path: /proc
+        - name: boot-fs
+          hostPath:
+            path: /boot
+        - name: etc-fs
+          hostPath:
+            path: /etc
