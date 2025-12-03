@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: trivy-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trivy-operator
+  namespace: trivy-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trivy-operator
+  template:
+    metadata:
+      labels:
+        app: trivy-operator
+    spec:
+      containers:
+        - name: trivy-operator
+          image: aquasec/trivy-operator:latest
+          ports:
+            - containerPort: 8080

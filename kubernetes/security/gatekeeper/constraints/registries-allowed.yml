@@ -3,7 +3,12 @@ kind: AllowedRegistries
 metadata:
   name: registries-allowed
 spec:
+  enforcementAction: deny
   match:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+  parameters:
+    registries:
+      - "docker.io"
+      - "ghcr.io/aquasecurity"
