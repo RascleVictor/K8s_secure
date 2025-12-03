@@ -67,3 +67,16 @@ kubectl get pods -n gatekeeper-system
 kubectl apply -f kubernetes/security/gatekeeper/templates/
 kubectl apply -f kubernetes/security/gatekeeper/constraints/
 kubectl get allowedregistries
+
+kubectl delete namespace kyverno
+kubectl create namespace kyverno
+kubectl apply -f https://github.com/kyverno/kyverno/releases/download/v1.16.0/install.yaml
+kubectl get pods -n kyverno -w
+kubectl apply -f kubernetes/security/kyverno/kyverno-policy-exception.yaml
+
+kubectl apply -f https://raw.githubusercontent.com/aquasecurity/trivy-operator/v0.15.0/deploy/static/trivy-operator.yaml
+kubectl get pods -n trivy-system -w
+
+kubectl apply -f kubernetes/security/falco/falco-policy-exception.yml
+kubectl apply -f kubernetes/security/falco/manifests/falco-daemonset.yml
+kubectl get pods -n falco -w
