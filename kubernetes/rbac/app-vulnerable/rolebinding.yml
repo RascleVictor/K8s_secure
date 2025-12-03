@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: app-vulnerable-rolebinding
+  namespace: app-vulnerable
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: app-vulnerable
+roleRef:
+  kind: Role
+  name: app-vulnerable-role
+  apiGroup: rbac.authorization.k8s.io
