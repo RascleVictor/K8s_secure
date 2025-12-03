@@ -1,0 +1,18 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: allowed-registries
+spec:
+  validationFailureAction: enforce
+  rules:
+    - name: image-registries
+      match:
+        resources:
+          kinds:
+            - Pod
+      validate:
+        message: "Images must come from allowed registries"
+        pattern:
+          spec:
+            containers:
+              - image: "myregistry.com/*"

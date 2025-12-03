@@ -1,0 +1,21 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: deny-capabilities
+spec:
+  validationFailureAction: enforce
+  rules:
+    - name: forbid-capabilities
+      match:
+        resources:
+          kinds:
+            - Pod
+      validate:
+        message: "Adding these capabilities is forbidden"
+        pattern:
+          spec:
+            containers:
+              - name: "*"
+                securityContext:
+                  capabilities:
+                    add: []
