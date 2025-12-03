@@ -1,0 +1,18 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8sdenycapabilities
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sDenyCapabilities
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package denycapabilities
+        violation[{"msg": msg}] {
+          container := input.review.object.spec.containers[_]
+          cap := container.securityContext.capabilities.add[_]
+          msg := sprintf("Adding capability %v is forbidden in container %v", [cap, container.name])
+        }

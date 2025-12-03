@@ -1,0 +1,18 @@
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: k8sdenycontainerroot
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sDenyContainerRoot
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8sdenycontainerroot
+
+        violation[{"msg": msg}] {
+          input.review.object.spec.containers[_].securityContext.runAsNonRoot != true
+          msg := "Running containers as root is forbidden"
+        }
