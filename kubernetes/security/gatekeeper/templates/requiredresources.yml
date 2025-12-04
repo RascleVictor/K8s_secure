@@ -12,7 +12,6 @@ spec:
     - target: admission.k8s.gatekeeper.sh
       rego: |
         package requiredresources
-        
         violation[{"msg": msg}] {
           c := input.review.object.spec.containers[_]
           not c.resources.limits

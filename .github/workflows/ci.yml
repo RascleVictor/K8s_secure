@@ -55,3 +55,4 @@ jobs:
         run: |
           docker tag app-secure:latest ghcr.io/${{ github.repository }}/app-secure:latest
           docker push ghcr.io/${{ github.repository }}/app-secure:latest
+          

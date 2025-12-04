@@ -40,3 +40,4 @@ jobs:
         run: |
           cosign sign ghcr.io/${{ github.repository }}/app-secure:latest \
             --yes
+          
