@@ -17,10 +17,12 @@ jobs:
         uses: ibiqlik/action-yamllint@v3
 
       - name: Kubeconform validation
-        uses: yokawasa/action-kubeconform@v1
-        with:
-          kube-version: "1.29.0"
-          schema-location: default
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}/kubernetes:/manifests \
+            ghcr.io/yokawasa/kubeconform:latest \
+            -strict -ignore-missing-schemas -kubernetes-version 1.29.0 \
+            -summary /manifests
 
       - name: Build Docker image
         run: |
