@@ -18,11 +18,10 @@ jobs:
 
       - name: Kubeconform validation
         run: |
-          docker run --rm \
-            -v ${{ github.workspace }}/kubernetes:/manifests \
-            ghcr.io/yokawasa/kubeconform:latest \
-            -strict -ignore-missing-schemas -kubernetes-version 1.29.0 \
-            -summary /manifests
+            docker run --rm \
+              -v ${{ github.workspace }}:/workspace \
+              ghcr.io/yokawasa/kubeconform:latest \
+              -strict -kubernetes-version 1.29.0 /workspace/kubernetes
 
       - name: Build Docker image
         run: |
