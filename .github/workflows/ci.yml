@@ -34,7 +34,7 @@ jobs:
 
       - name: Kubeconform validation
         run: |
-          kubeconform -strict -kubernetes-version 1.29.0 ./kubernetes -ignore-missing-schemas
+          kubeconform -strict -kubernetes-version 1.29.0 -ignore-missing-schemas ./kubernetes
 
       - name: Build Docker image
         run: docker build -t app-secure:latest ./docker
