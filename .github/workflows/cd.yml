@@ -34,11 +34,12 @@ jobs:
 
       - name: Build image
         run: |
-          docker build -t $IMAGE_REPO/app-secure:latest .
+          docker build -t app-secure:latest  ./docker/app-web/
 
       - name: Push image
         run: |
-          docker push $IMAGE_REPO/app-secure:latest
+          docker tag app-secure:latest ghcr.io/rasclevictor/k8s-secure/app-secure:latest
+          docker push ghcr.io/rasclevictor/k8s-secure/app-secure:latest
 
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3
