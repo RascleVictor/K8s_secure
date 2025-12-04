@@ -1,0 +1,14 @@
+extends: default
+
+rules:
+  document-start:
+    level: warning
+  line-length:
+    max: 120
+    level: warning
+  trailing-spaces:
+    level: error
+  new-line-at-end-of-file:
+    level: warning
+  brackets:
+    level: error
