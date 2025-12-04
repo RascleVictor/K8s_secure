@@ -1,0 +1,55 @@
+name: CI - Build & Security Scan
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Lint YAML
+        uses: ibiqlik/action-yamllint@v3
+
+      - name: Kubeconform validation
+        uses: yokawasa/action-kubeconform@v1
+        with:
+          kube-version: "1.29.0"
+          schema-location: default
+
+      - name: Build Docker image
+        run: |
+          docker build -t app-secure:latest ./docker
+
+      - name: Trivy Image Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: app-secure:latest
+          format: "table"
+          exit-code: "1"
+          severity: "HIGH,CRITICAL"
+
+      - name: Trivy Config Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "config"
+          scan-ref: "./kubernetes"
+          exit-code: "1"
+          format: "table"
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Docker Image
+        run: |
+          docker tag app-secure:latest ghcr.io/${{ github.repository }}/app-secure:latest
+          docker push ghcr.io/${{ github.repository }}/app-secure:latest
