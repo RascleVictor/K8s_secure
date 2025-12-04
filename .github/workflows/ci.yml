@@ -38,7 +38,7 @@ jobs:
             | xargs kubeconform -strict -kubernetes-version 1.29.0 -ignore-missing-schemas
 
       - name: Build Docker image
-        run: docker build -t app-secure:latest ./docker
+        run: docker build -t app-secure:latest -f ./docker/app-web/dockerfile ./docker/app-web
 
       - name: Trivy - Image Scan
         uses: aquasecurity/trivy-action@master
