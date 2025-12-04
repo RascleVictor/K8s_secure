@@ -1,3 +1,4 @@
+---
 enabled: true
 block_root: true
 require_resources: true
