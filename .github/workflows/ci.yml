@@ -34,7 +34,9 @@ jobs:
 
       - name: Kubeconform validation
         run: |
-          kubeconform -strict -kubernetes-version 1.29.0 -ignore-missing-schemas --exclude ./kubernetes/security/gatekeeper/values/values.yml ./kubernetes
+          find ./kubernetes -type f -name "*.yml" ! -path "./kubernetes/security/gatekeeper/values/values.yml" \
+            | xargs kubeconform -strict -kubernetes-version 1.29.0 -ignore-missing-schemas
+
       - name: Build Docker image
         run: docker build -t app-secure:latest ./docker
 
