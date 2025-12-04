@@ -34,10 +34,7 @@ jobs:
 
       - name: Kubeconform validation
         run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/workspace \
-            ghcr.io/yokawasa/kubeconform:latest \
-            -strict -kubernetes-version 1.29.0 /workspace/kubernetes
+          kubeconform -strict -kubernetes-version 1.29.0 ./kubernetes
 
       - name: Build Docker image
         run: docker build -t app-secure:latest ./docker
