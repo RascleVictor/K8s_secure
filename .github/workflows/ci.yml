@@ -18,6 +18,13 @@ jobs:
         with:
           config_file: .yamllint.yml
 
+      - name: Install Kubeconform
+        run: |
+            curl -sSL -o kubeconform.tar.gz https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
+            tar -xzf kubeconform.tar.gz
+            chmod +x kubeconform
+            sudo mv kubeconform /usr/local/bin/kubeconform
+
       - name: Kubeconform validation
         run: |
           docker run --rm \
