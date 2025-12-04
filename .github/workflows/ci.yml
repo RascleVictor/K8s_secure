@@ -17,7 +17,7 @@ jobs:
       - name: YAML Lint
         uses: ibiqlik/action-yamllint@v3
         with:
-          config_file: .yamllint.yaml
+          config_file: .yamllint.yml
 
       - name: Kubeconform validation
         run: |
