@@ -13,7 +13,7 @@ L'objectif est de montrer comment sécuriser un cluster et ses workloads avec pl
    Limitation des communications entre pods pour réduire la surface d'attaque.
 
 2. **RBAC strict**  
-   Permissions minimales pour les utilisateurs et services accounts.
+   Permissions minimales pour les utilisateurs et service accounts.
 
 3. **Pod Security Standards / Policies**  
    Restriction sur les conteneurs privilégiés, root, hostPath, etc.
@@ -43,6 +43,8 @@ L'objectif est de montrer comment sécuriser un cluster et ses workloads avec pl
 ```text
 kubernetes/
   apps/
+    app-web/
+    app-vulnerable/
   security/
     gatekeeper/
       templates/
@@ -51,11 +53,18 @@ kubernetes/
     pod-security/
     trivy/
     falco/
+docker/
+  app-web/
+    Dockerfile
+  app-vulnerable/
 
-Avec kind 
+
+# Créer un cluster Kind sécurisé
 kind create cluster --name secure-cluster --config kind-config.yaml
+
+# Vérifier le cluster
 kubectl cluster-info
-kubectl get nodes
+kubectl get nodes -o wide
 
 kubectl apply -f kubernetes/namespaces/
 kubectl apply -f kubernetes/apps/
@@ -68,10 +77,21 @@ kubectl apply -f kubernetes/security/gatekeeper/templates/
 kubectl apply -f kubernetes/security/gatekeeper/constraints/
 kubectl get allowedregistries
 
-kubectl delete namespace kyverno
+# Supprimer les anciennes installations si nécessaire
+kubectl delete namespace kyverno || true
 kubectl create namespace kyverno
-kubectl apply -f https://github.com/kyverno/kyverno/releases/download/v1.16.0/install.yaml
+
+# Ajouter le repo Helm de Kyverno
+helm repo add kyverno https://kyverno.github.io/kyverno/
+helm repo update
+
+# Installer Kyverno
+helm install kyverno kyverno/kyverno --namespace kyverno --create-namespace
+
+# Vérifier les pods Kyverno
 kubectl get pods -n kyverno -w
+
+# Appliquer des policies d’exception si nécessaire
 kubectl apply -f kubernetes/security/kyverno/kyverno-policy-exception.yaml
 
 kubectl apply -f https://raw.githubusercontent.com/aquasecurity/trivy-operator/v0.15.0/deploy/static/trivy-operator.yaml
